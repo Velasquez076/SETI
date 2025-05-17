@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: "franchises"
+  devtools:
+    add-properties: false
+  profiles:
+    include: null
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+postgres:
+  r2dbc:
+    host: "${HOST}"
+    port: "${PORT}"
+    database: "${DB}"
+    schema: "${SCHEMA}"
+    username: "${USERNAME}"
+    password: "${PASSWORD}"
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
