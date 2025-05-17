@@ -3,8 +3,8 @@ package co.com.bancolombia.r2dbc.franchise;
 import co.com.bancolombia.model.franchise.Franchise;
 import co.com.bancolombia.model.franchise.exceptions.BusinessException;
 import co.com.bancolombia.model.franchise.gateways.FranchiseRepository;
-import co.com.bancolombia.r2dbc.franchise.entity.FranchiseEntity;
 import co.com.bancolombia.r2dbc.exceptions.TechnicalException;
+import co.com.bancolombia.r2dbc.franchise.entity.FranchiseEntity;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.log4j.Log4j2;
 import org.reactivecommons.utils.ObjectMapper;
@@ -28,8 +28,7 @@ class FranchiseRepositoryAdapter extends ReactiveAdapterOperations<
      *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
      *  Or using mapper.map with the class of the object model
      */
-    super(repository, mapper,
-        d -> mapper.map(d, co.com.bancolombia.model.franchise.Franchise.class));
+    super(repository, mapper,d -> mapper.map(d, Franchise.class));
   }
 
   public Mono<Franchise> save(Franchise franchise) {

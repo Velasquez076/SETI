@@ -1,7 +1,7 @@
 package co.com.bancolombia.api.config;
 
-import co.com.bancolombia.api.BranchHandler;
-import co.com.bancolombia.api.BranchRouterRest;
+import co.com.bancolombia.api.branch.BranchHandler;
+import co.com.bancolombia.api.branch.BranchRouterRest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
