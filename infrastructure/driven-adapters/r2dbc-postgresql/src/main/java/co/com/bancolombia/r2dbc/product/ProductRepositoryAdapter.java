@@ -71,4 +71,18 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
+
+  @Override
+  public Mono<Void> deleteProduct(Long id) {
+    return repository.findById(id)
+        .switchIfEmpty(Mono.error(new BusinessException(MESSAGE_NOT_FOUND)))
+        .flatMap(productEntity ->
+            super.repository.deleteById(productEntity.getId())
+        )
+        .doOnSuccess(success -> log.info("Product with id {} was deleted!", id))
+        .onErrorResume(err -> {
+          log.error("{}, {}", err.getMessage(), err);
+          return Mono.error(new TechnicalException(err.getMessage()));
+        });
+  }
 }

@@ -10,4 +10,6 @@ public interface ProductsRepository {
   Mono<Product> updateProductName(Product product);
 
   Mono<Product> updateProductStock(Product product);
+
+  Mono<Void> deleteProduct(Long id);
 }

@@ -31,6 +31,10 @@ public class Product {
     this.stock = stock;
   }
 
+  public Product(Long id) {
+    this.id = id;
+  }
+
   public Product(Long idBranch, String name, Double price, Long stock) {
     this.idBranch = idBranch;
     this.name = name;

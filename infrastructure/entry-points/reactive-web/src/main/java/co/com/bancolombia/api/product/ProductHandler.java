@@ -56,4 +56,12 @@ public class ProductHandler extends ResponseErrorHandler {
         .doOnSuccess(sr -> log.info("Product Stock updated successfully! {}", sr.statusCode()))
         .onErrorResume(this::errorHandler);
   }
+
+  public Mono<ServerResponse> deleteProductById(ServerRequest serverRequest) {
+    String id = serverRequest.pathVariable("id");
+    return productUseCase.deleteProductById(new Product(Long.parseLong(id)))
+        .then(buildResponse("Deleted successfully!", Messages.OK.getCode()))
+        .doOnSuccess(sr -> log.info("Product deleted successfully!"))
+        .onErrorResume(this::errorHandler);
+  }
 }

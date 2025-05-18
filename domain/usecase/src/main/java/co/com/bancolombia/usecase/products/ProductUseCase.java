@@ -26,4 +26,9 @@ public class ProductUseCase {
     product.validateStock(product.getStock());
     return productsRepository.updateProductStock(product);
   }
+
+  public Mono<Void> deleteProductById(Product product) {
+    product.validateId(product.getId());
+    return productsRepository.deleteProduct(product.getId());
+  }
 }
