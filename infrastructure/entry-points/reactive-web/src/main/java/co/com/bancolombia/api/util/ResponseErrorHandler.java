@@ -13,9 +13,9 @@ public abstract class ResponseErrorHandler {
   public Mono<ServerResponse> errorHandler(Throwable ex) {
     return switch (ex) {
       case TechnicalException technicalException ->
-          WrapperResponse.buildResponse(ex.getMessage(), Messages.BAD_REQUEST.getCode());
+          WrapperResponse.buildResponse(technicalException.getMessage(), Messages.BAD_REQUEST.getCode());
       case BusinessException businessException ->
-          WrapperResponse.buildResponse(ex.getMessage(), Messages.BAD_REQUEST.getCode());
+          WrapperResponse.buildResponse(businessException.getMessage(), Messages.BAD_REQUEST.getCode());
       default -> {
         log.error("{}, {}", ex.getMessage(), ex);
         yield WrapperResponse.buildResponse(ex.getMessage(), Messages.UNKNOW_ERROR.getCode());
