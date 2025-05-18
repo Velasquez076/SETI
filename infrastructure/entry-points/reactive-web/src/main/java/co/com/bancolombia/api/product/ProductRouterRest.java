@@ -1,6 +1,7 @@
 package co.com.bancolombia.api.product;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PATCH;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -17,7 +18,8 @@ public class ProductRouterRest {
 
   @Bean
   public RouterFunction<ServerResponse> routerFunction(ProductHandler handler) {
-    return route(POST(PATH), handler::saveProduct)
+    return route(GET(PATH), handler::getProductsMaxStock)
+        .andRoute(POST(PATH), handler::saveProduct)
         .andRoute(PATCH(PATH.concat("/name/{id}")), handler::updateProductName)
         .andRoute(DELETE(PATH.concat("/{id}")), handler::deleteProductById)
         .and(route(PATCH(PATH.concat("/stock/{id}")), handler::updateProductStock));

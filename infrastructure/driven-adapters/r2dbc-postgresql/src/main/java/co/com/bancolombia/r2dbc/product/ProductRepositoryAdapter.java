@@ -85,4 +85,28 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
+
+  @Override
+  public Mono<Product> findTopByBranchIdOrderByStockDesc(Long idBranch) {
+    return repository.findTopByIdBranchOrderByStockDesc(idBranch)
+        .switchIfEmpty(Mono.error(
+            new BusinessException(String.format("Branch with id '%s' not found!", idBranch))))
+        .map(this::buildProduct)
+        .doOnSuccess(product -> log.info("Product found with name '{}'", product.getName()))
+        .onErrorResume(err -> {
+          log.error("{}, {}", err.getMessage(), err);
+          return Mono.error(new TechnicalException(err.getMessage()));
+        });
+
+  }
+
+  private Product buildProduct(ProductEntity productEntity) {
+    var product = new Product();
+    product.setId(productEntity.getId());
+    product.setName(productEntity.getName());
+    product.setPrice(productEntity.getPrice());
+    product.setStock(productEntity.getStock());
+    product.setIdBranch(productEntity.getIdBranch());
+    return product;
+  }
 }

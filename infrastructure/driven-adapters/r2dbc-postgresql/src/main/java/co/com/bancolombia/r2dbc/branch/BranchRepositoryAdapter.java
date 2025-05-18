@@ -9,6 +9,7 @@ import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.log4j.Log4j2;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Log4j2
@@ -51,5 +52,22 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
           log.error("{}, {}", err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
+  }
+
+  @Override
+  public Flux<Branch> findByFranchiseId(Long id) {
+    return repository.findByIdFranchise(id)
+        .switchIfEmpty(
+            Mono.error(new BusinessException(String.format("Franchise with id '%s' not found", id))))
+        .map(this::buildBranch)
+        .onErrorResume(err -> {
+          log.error("{}, {}", err.getMessage(), err);
+          return Flux.error(new TechnicalException(err.getMessage()));
+        });
+  }
+
+  private Branch buildBranch(BranchEntity branchEntity) {
+    return new Branch(branchEntity.getId(), branchEntity.getIdFranchise(),
+        branchEntity.getName());
   }
 }

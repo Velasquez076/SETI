@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Getter
@@ -23,5 +24,11 @@ public class WrapperResponse<T> {
     var data = new WrapperResponse<>(UUID.randomUUID(), HttpStatusCode.valueOf(code),
         object);
     return ServerResponse.status(code).bodyValue(data);
+  }
+
+  public static <T> Flux<ServerResponse> buildResponseFlux(T object, int code) {
+    var data = new WrapperResponse<>(UUID.randomUUID(), HttpStatusCode.valueOf(code),
+        object);
+    return ServerResponse.status(code).bodyValue(data).flux();
   }
 }
