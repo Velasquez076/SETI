@@ -12,11 +12,11 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class FranchiseRouterRest {
 
-  private static final String BASE_PATH = "/api/franchise";
+  private static final String PATH = "/api/franchise";
 
   @Bean
   public RouterFunction<ServerResponse> franchiseRouterFunction(FranchiseHandler handler) {
-    return route(POST(BASE_PATH.concat("/save")), handler::saveFranchise)
-        .andRoute(PUT(BASE_PATH.concat("/update")), handler::updateFranchise);
+    return route(POST(PATH), handler::saveFranchise)
+        .andRoute(PUT(PATH), handler::updateFranchise);
   }
 }

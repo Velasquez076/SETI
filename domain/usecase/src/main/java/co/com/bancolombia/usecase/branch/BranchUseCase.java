@@ -14,4 +14,9 @@ public class BranchUseCase {
     branch.validateNameAndIdFranchise(branch);
     return branchRepository.save(branch);
   }
+
+  public Mono<Branch> updateBranch(Branch branch) {
+    branch.validateNameAndId(branch);
+    return branchRepository.update(branch);
+  }
 }

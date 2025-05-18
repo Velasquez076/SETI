@@ -1,4 +1,4 @@
-package co.com.bancolombia.model.franchise.exceptions;
+package co.com.bancolombia.model.exceptions;
 
 public class BusinessException extends RuntimeException {
 

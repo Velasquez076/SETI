@@ -1,4 +1,4 @@
-package co.com.bancolombia.r2dbc.exceptions;
+package co.com.bancolombia.model.exceptions;
 
 public class TechnicalException extends RuntimeException {
 

@@ -2,9 +2,9 @@ package co.com.bancolombia.r2dbc.branch;
 
 import co.com.bancolombia.model.branch.Branch;
 import co.com.bancolombia.model.branch.gateways.BranchRepository;
-import co.com.bancolombia.model.franchise.Franchise;
+import co.com.bancolombia.model.exceptions.BusinessException;
+import co.com.bancolombia.model.exceptions.TechnicalException;
 import co.com.bancolombia.r2dbc.branch.entity.BranchEntity;
-import co.com.bancolombia.r2dbc.exceptions.TechnicalException;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.log4j.Log4j2;
 import org.reactivecommons.utils.ObjectMapper;
@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Log4j2
 @Repository
-public class BranchRepositoryAdapter extends ReactiveAdapterOperations<
+class BranchRepositoryAdapter extends ReactiveAdapterOperations<
     Branch,
     BranchEntity,
     Long,
@@ -29,6 +29,7 @@ public class BranchRepositoryAdapter extends ReactiveAdapterOperations<
     super(repository, mapper, d -> mapper.map(d, Branch.class/* change for domain model */));
   }
 
+  @Override
   public Mono<Branch> save(Branch branch) {
     return super.save(branch)
         .onErrorResume(err -> {
@@ -37,34 +38,18 @@ public class BranchRepositoryAdapter extends ReactiveAdapterOperations<
         });
   }
 
-//  public Mono<Branch> save(Branch branch) {
-//    return Mono.just(branch)
-//        .map(this::buildEntity)
-//        .flatMap(repository::save)
-//        .map(this::toDomain)
-//        .onErrorResume(err -> {
-//          log.error("{}, {}", err.getMessage(), err);
-//          return Mono.error(new TechnicalException(err.getMessage()));
-//        });
-//  }
-//
-//  private Branch toDomain(BranchEntity entity) {
-//    return Branch.builder()
-//        .id(entity.getId())
-//        .idFranchise(entity.getFranchise().getId())
-//        .name(entity.getName())
-//        .build();
-//  }
-//
-//  private Franchise toFranchise(Long idFranchise) {
-//    return Franchise.builder()
-//        .id(idFranchise)
-//        .build();
-//  }
-//
-//  private BranchEntity buildEntity(Branch branch) {
-//    var entity = new BranchEntity();
-//    entity.setFranchise(toFranchise(branch.getIdFranchise()));
-//    return entity;
-//  }
+  @Override
+  public Mono<Branch> update(Branch branch) {
+    return repository.findById(branch.getId())
+        .switchIfEmpty(Mono.error(new BusinessException("Branch not found for the update!")))
+        .flatMap(entity -> {
+          entity.setName(branch.getName());
+          branch.setIdFranchise(entity.getIdFranchise());
+          return super.save(branch);
+        }).doOnSuccess(success -> log.info("Updated to {}:", success.getName()))
+        .onErrorResume(err -> {
+          log.error("{}, {}", err.getMessage(), err);
+          return Mono.error(new TechnicalException(err.getMessage()));
+        });
+  }
 }
