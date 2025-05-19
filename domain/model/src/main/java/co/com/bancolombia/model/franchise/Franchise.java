@@ -18,10 +18,13 @@ public class Franchise {
   private Long id;
   private String name;
 
-  public void validateFields() {
+  public void validateName() {
     if (Objects.isNull(this.getName())) {
       throw new BusinessException("Franchise name is null, is required!");
     }
+  }
+
+  public void validateId() {
     if (Objects.isNull(this.getId())) {
       throw new BusinessException("Franchise id is null, is required!");
     }

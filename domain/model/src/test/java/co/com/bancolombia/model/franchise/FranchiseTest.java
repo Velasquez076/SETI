@@ -16,20 +16,20 @@ class FranchiseTest {
   @Test
   void validateFieldsIdSuccessTest() {
     franchise = new Franchise(1L, "name");
-    franchise.validateFields();
+    franchise.validateName();
   }
 
   @Test
   void validateFieldsNameSuccessTest() {
     franchise = new Franchise(1L, "name");
-    franchise.validateFields();
+    franchise.validateName();
   }
 
   @Test
   void validateFieldsNameNullTest() {
     franchise = new Franchise(1L, null);
     Assertions.assertThrows(BusinessException.class, () ->
-        franchise.validateFields()
+        franchise.validateName()
     );
   }
 
@@ -37,7 +37,7 @@ class FranchiseTest {
   void validateFieldsIdNullTest() {
     franchise = new Franchise(null, "name");
     Assertions.assertThrows(BusinessException.class, () ->
-        franchise.validateFields()
+        franchise.validateId()
     );
   }
 }

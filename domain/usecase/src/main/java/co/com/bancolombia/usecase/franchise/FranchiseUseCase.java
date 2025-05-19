@@ -11,12 +11,12 @@ public class FranchiseUseCase {
   private final FranchiseRepository franchiseRepository;
 
   public Mono<Franchise> save(Franchise franchise) {
-    franchise.validateFields();
+    franchise.validateName();
     return franchiseRepository.save(franchise);
   }
 
   public Mono<Franchise> update(Franchise franchise) {
-    franchise.validateFields();
+    franchise.validateName();
     return franchiseRepository.update(franchise);
   }
 }
