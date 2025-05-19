@@ -1,6 +1,8 @@
 package co.com.bancolombia.model.products.gateways;
 
+import co.com.bancolombia.model.branchproductstock.BranchProductStock;
 import co.com.bancolombia.model.products.Product;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ProductsRepository {
@@ -13,5 +15,5 @@ public interface ProductsRepository {
 
   Mono<Void> deleteProduct(Long id);
 
-  Mono<Product> findTopByBranchIdOrderByStockDesc(Long idBranch);
+  Flux<BranchProductStock> findTopByBranchIdOrderByStock(Long id);
 }

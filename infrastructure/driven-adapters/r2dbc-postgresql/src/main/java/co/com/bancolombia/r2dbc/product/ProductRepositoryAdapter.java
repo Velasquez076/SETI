@@ -1,19 +1,22 @@
 package co.com.bancolombia.r2dbc.product;
 
+import co.com.bancolombia.model.branchproductstock.BranchProductStock;
 import co.com.bancolombia.model.exceptions.BusinessException;
 import co.com.bancolombia.model.exceptions.TechnicalException;
 import co.com.bancolombia.model.products.Product;
 import co.com.bancolombia.model.products.gateways.ProductsRepository;
 import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.bancolombia.r2dbc.product.entity.ProductEntity;
+import co.com.bancolombia.r2dbc.product.projection.BranchProductProjection;
 import lombok.extern.log4j.Log4j2;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Log4j2
 @Repository
-public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
+class ProductRepositoryAdapter extends ReactiveAdapterOperations<
     Product,
     ProductEntity,
     Long,
@@ -88,26 +91,24 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
   }
 
   @Override
-  public Mono<Product> findTopByBranchIdOrderByStockDesc(Long idBranch) {
-    return repository.findTopByIdBranchOrderByStockDesc(idBranch)
+  public Flux<BranchProductStock> findTopByBranchIdOrderByStock(Long id) {
+    return repository.findTopStockProductsByFranchiseId(id)
         .switchIfEmpty(Mono.error(
-            new BusinessException(
-                String.format("Branch with id '%s' don't have products!", idBranch))))
+            new BusinessException("This franchise don't have products associate")))
         .map(this::buildProduct)
-        .doOnSuccess(product -> log.info("Product found with name '{}'", product.getName()))
         .onErrorResume(err -> {
           log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
 
-  private Product buildProduct(ProductEntity productEntity) {
-    var product = new Product();
-    product.setId(productEntity.getId());
-    product.setName(productEntity.getName());
-    product.setPrice(productEntity.getPrice());
-    product.setStock(productEntity.getStock());
-    product.setIdBranch(productEntity.getIdBranch());
-    return product;
+  private BranchProductStock buildProduct(BranchProductProjection productProjection) {
+    return BranchProductStock.builder()
+        .branchId(productProjection.getIdBranch())
+        .productId(productProjection.getId())
+        .productName(productProjection.getName())
+        .productPrice(productProjection.getPrice())
+        .stock(productProjection.getStock())
+        .build();
   }
 }

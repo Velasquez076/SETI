@@ -14,7 +14,6 @@ import lombok.Setter;
 public class BranchProductStock {
 
   private Long branchId;
-  private String branchName;
   private Long productId;
   private String productName;
   private Double productPrice;
