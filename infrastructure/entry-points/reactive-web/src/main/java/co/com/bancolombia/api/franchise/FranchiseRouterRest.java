@@ -4,19 +4,22 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+import co.com.bancolombia.api.config.EndpointsPathsConfig;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
+@RequiredArgsConstructor
 public class FranchiseRouterRest {
 
-  private static final String PATH = "/api/franchise";
+  private final EndpointsPathsConfig basePath;
 
   @Bean
   public RouterFunction<ServerResponse> franchiseRouterFunction(FranchiseHandler handler) {
-    return route(POST(PATH), handler::saveFranchise)
-        .andRoute(PUT(PATH), handler::updateFranchise);
+    return route(POST(basePath.franchise()), handler::saveFranchise)
+        .andRoute(PUT(basePath.franchise()), handler::updateFranchise);
   }
 }

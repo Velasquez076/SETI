@@ -21,6 +21,8 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
     BranchReactiveRepository
     > implements BranchRepository {
 
+  private static final String LOG_MESSAGE = "{}, {}";
+
   public BranchRepositoryAdapter(BranchReactiveRepository repository, ObjectMapper mapper) {
     /**
      *  Could be use mapper.mapBuilder if your domain model implement builder pattern
@@ -34,7 +36,7 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
   public Mono<Branch> save(Branch branch) {
     return super.save(branch)
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
@@ -49,7 +51,7 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
           return super.save(branch);
         }).doOnSuccess(success -> log.info("Updated to {}:", success.getName()))
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
@@ -58,10 +60,11 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
   public Flux<Branch> findByFranchiseId(Long id) {
     return repository.findByIdFranchise(id)
         .switchIfEmpty(
-            Mono.error(new BusinessException(String.format("Franchise with id '%s' not found", id))))
+            Mono.error(
+                new BusinessException(String.format("Franchise with id '%s' not found", id))))
         .map(this::buildBranch)
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Flux.error(new TechnicalException(err.getMessage()));
         });
   }

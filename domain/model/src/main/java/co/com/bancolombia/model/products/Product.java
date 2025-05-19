@@ -42,28 +42,28 @@ public class Product {
     this.stock = stock;
   }
 
-  public void validations(Product product) {
-    if (product.getPrice() <= 0) {
+  public void validations() {
+    if (this.getPrice() <= 0) {
       throw new BusinessException("Price must be positive");
     }
-    validateName(product.getName());
-    validateStock(product.getStock());
+    validateName();
+    validateStock();
   }
 
-  public void validateId(Long id) {
-    if (Objects.isNull(id)) {
+  public void validateId() {
+    if (Objects.isNull(this.getId())) {
       throw new BusinessException("Id cannot be null");
     }
   }
 
-  public void validateStock(Long stock) {
-    if (stock < 0) {
+  public void validateStock() {
+    if (this.getStock() < 0) {
       throw new BusinessException("Stock cannot be negative");
     }
   }
 
-  public void validateName(String name) {
-    if (Objects.isNull(name) || name.isBlank()) {
+  public void validateName() {
+    if (Objects.isNull(this.getName()) || this.getName().isBlank()) {
       throw new BusinessException("Product name cannot be empty");
     }
   }

@@ -21,6 +21,7 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
     > implements ProductsRepository {
 
   private static final String MESSAGE_NOT_FOUND = "Product not found for the update!";
+  private static final String LOG_MESSAGE = "{}, {}";
 
   public ProductRepositoryAdapter(ProductReactiveRepository repository, ObjectMapper mapper) {
     /**
@@ -51,7 +52,7 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
           return super.save(product);
         }).doOnSuccess(success -> log.info("Updated name to {}:", success.getName()))
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
@@ -67,7 +68,7 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
           return super.save(product);
         }).doOnSuccess(success -> log.info("Updated Stock to {}:", success.getStock()))
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
@@ -81,7 +82,7 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
         )
         .doOnSuccess(success -> log.info("Product with id {} was deleted!", id))
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
@@ -90,14 +91,14 @@ public class ProductRepositoryAdapter extends ReactiveAdapterOperations<
   public Mono<Product> findTopByBranchIdOrderByStockDesc(Long idBranch) {
     return repository.findTopByIdBranchOrderByStockDesc(idBranch)
         .switchIfEmpty(Mono.error(
-            new BusinessException(String.format("Branch with id '%s' not found!", idBranch))))
+            new BusinessException(
+                String.format("Branch with id '%s' don't have products!", idBranch))))
         .map(this::buildProduct)
         .doOnSuccess(product -> log.info("Product found with name '{}'", product.getName()))
         .onErrorResume(err -> {
-          log.error("{}, {}", err.getMessage(), err);
+          log.error(LOG_MESSAGE, err.getMessage(), err);
           return Mono.error(new TechnicalException(err.getMessage()));
         });
-
   }
 
   private Product buildProduct(ProductEntity productEntity) {

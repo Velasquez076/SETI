@@ -24,5 +24,11 @@ postgres:
     schema: "${SCHEMA}"
     username: "${USERNAME}"
     password: "${PASSWORD}"
+api:
+  path:
+    base: "/api"
+    franchise: "${api.path.base}/franchise"
+    branch: "${api.path.base}/branch"
+    product: "${api.path.base}/products"
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"

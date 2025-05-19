@@ -11,12 +11,12 @@ public class BranchUseCase {
   private final BranchRepository branchRepository;
 
   public Mono<Branch> saveBranch(Branch branch) {
-    branch.validateNameAndIdFranchise(branch);
+    branch.validateNameAndIdFranchise();
     return branchRepository.save(branch);
   }
 
   public Mono<Branch> updateBranch(Branch branch) {
-    branch.validateNameAndId(branch);
+    branch.validateNameAndId();
     return branchRepository.update(branch);
   }
 }

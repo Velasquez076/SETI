@@ -24,14 +24,14 @@ public class Branch {
     this.name = name;
   }
 
-  public void validateNameAndIdFranchise(Branch branch) {
-    if (Objects.isNull(branch.getIdFranchise()) || Objects.isNull(branch.getName())) {
+  public void validateNameAndIdFranchise() {
+    if (Objects.isNull(this.getIdFranchise()) || Objects.isNull(this.getName())) {
       throw new BusinessException("These fields id_franchise or name are required, cannot null!");
     }
   }
 
-  public void validateNameAndId(Branch branch) {
-    if (Objects.isNull(branch.getId()) || Objects.isNull(branch.getName())) {
+  public void validateNameAndId() {
+    if (Objects.isNull(this.getId()) || Objects.isNull(this.getName())) {
       throw new BusinessException("The name or id is null!");
     }
   }
