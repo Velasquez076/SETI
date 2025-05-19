@@ -20,7 +20,6 @@ class BranchProductStockTest {
   void setup() {
     stock = new BranchProductStock();
     stock.setBranchId(ID_TEST);
-    stock.setBranchName(NAME);
     stock.setProductId(ID_TEST);
     stock.setProductName(NAME);
     stock.setProductPrice(1D);
@@ -33,18 +32,8 @@ class BranchProductStockTest {
   }
 
   @Test
-  void getBranchName() {
-    Assertions.assertNotNull(stock.getBranchName());
-  }
-
-  @Test
   void getProductId() {
     Assertions.assertNotNull(stock.getProductId());
-  }
-
-  @Test
-  void getProductName() {
-    Assertions.assertNotNull(stock.getBranchName());
   }
 
   @Test

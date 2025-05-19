@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,11 +27,9 @@ class BranchProductStockUseCaseTest {
 
   @Test
   void findTopStockProductsByFranchiseTest() {
-    Mockito.doReturn(Flux.just(buildBranch()))
-        .when(branchRepository).findByFranchiseId(Mockito.anyLong());
 
-    Mockito.doReturn(Mono.just(buildProduct()))
-        .when(productRepository).findTopByBranchIdOrderByStockDesc(Mockito.anyLong());
+    Mockito.doReturn(Flux.just(buildProduct()))
+        .when(productRepository).findTopByBranchIdOrderByStock(Mockito.anyLong());
 
     var result = branchProductStockUseCase.findTopStockProductsByFranchise(1L);
 
@@ -48,13 +45,5 @@ class BranchProductStockUseCaseTest {
         .stock(25L)
         .price(2500D)
         .name("any-name").build();
-  }
-
-  Branch buildBranch() {
-    return Branch.builder()
-        .id(1L)
-        .idFranchise(1L)
-        .name("any-name")
-        .build();
   }
 }
