@@ -15,12 +15,11 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class WrapperResponse<T> {
 
-  private String uuid;
   private int status;
   private T content;
 
   public static <T> Mono<ServerResponse> buildResponse(T object, int code) {
-    var data = new WrapperResponse<>(UUID.randomUUID().toString(), code,
+    var data = new WrapperResponse<>(code,
         object);
     return ServerResponse.status(code).bodyValue(data);
   }

@@ -24,7 +24,7 @@ public class BranchHandler extends ResponseErrorHandler {
   public Mono<ServerResponse> saveBranch(ServerRequest serverRequest) {
     return serverRequest.bodyToMono(BranchDto.class)
         .flatMap(branchDto -> branchUseCase.saveBranch(
-            new Branch(branchDto.idFranchise(), branchDto.name())))
+            new Branch(branchDto.getIdFranchise(), branchDto.getName())))
         .doOnNext(f -> log.info("Saved Branch: id={}, name={}", f.getId(), f.getName()))
         .flatMap(branch -> buildResponse(branch, Messages.CREATE.getCode()))
         .doOnSuccess(sr -> log.info("Branch saved successfully! {}", sr.statusCode()))
@@ -34,7 +34,7 @@ public class BranchHandler extends ResponseErrorHandler {
   public Mono<ServerResponse> updateBranch(ServerRequest serverRequest) {
     return serverRequest.bodyToMono(BranchDto.class)
         .flatMap(branchDto -> branchUseCase.updateBranch(
-            new Branch(branchDto.id(), branchDto.idFranchise(), branchDto.name())))
+            new Branch(branchDto.getId(), branchDto.getIdFranchise(), branchDto.getName())))
         .doOnNext(f -> log.info("Updated Branch: id={}, name={}", f.getId(), f.getName()))
         .flatMap(branch -> buildResponse(branch, Messages.OK.getCode()))
         .doOnSuccess(sr -> log.info("Branch updated successfully! {}", sr.statusCode()))

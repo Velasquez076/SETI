@@ -32,7 +32,7 @@ class FranchiseRouterRestTest {
   @Autowired
   WebTestClient webTestClient;
 
-  //@Test
+  @Test
   void franchiseRouterFunctionTest_Post() {
 
     Long franchiseId = 1L;
@@ -42,7 +42,7 @@ class FranchiseRouterRestTest {
 
     Mockito.doReturn(Mono.just(franchiseSaved))
         .when(franchiseUseCase).save(Mockito.any(Franchise.class));
-//    Mockito.doReturn(Mono.just(franchiseSaved)).when(franchiseRepository).save(franchiseSaved);
+    Mockito.doReturn(Mono.just(franchiseSaved)).when(franchiseRepository).save(franchiseSaved);
 
     var response = webTestClient.post()
         .uri("/api/franchise")
@@ -51,6 +51,7 @@ class FranchiseRouterRestTest {
         .exchange();
 
     Assertions.assertNotNull(response);
+    response.expectStatus().isCreated();
     var wrapper =
         response.expectBody(new ParameterizedTypeReference<WrapperResponse<FranchiseDto>>() {
         });

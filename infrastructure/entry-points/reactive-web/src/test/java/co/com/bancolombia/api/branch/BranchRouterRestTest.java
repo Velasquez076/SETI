@@ -1,5 +1,7 @@
 package co.com.bancolombia.api.branch;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import co.com.bancolombia.api.dto.BranchDto;
 import co.com.bancolombia.api.dto.WrapperResponse;
 import co.com.bancolombia.model.branch.Branch;
@@ -14,7 +16,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +24,7 @@ import reactor.core.publisher.Mono;
     BranchUseCase.class})
 class BranchRouterRestTest {
 
-  @MockitoSpyBean
+  @MockitoBean
   BranchUseCase branchUseCase;
 
   @MockitoBean
@@ -37,9 +38,12 @@ class BranchRouterRestTest {
     Long branchId = 1L;
     String branchName = "name-br";
     Branch branchSaved = new Branch(branchId, branchName);
-    BranchDto requestBody = new BranchDto(null, 1L, "branch-name");
+    BranchDto requestBody = new BranchDto(null, 1L, branchName);
 
-    Mockito.when(branchUseCase.saveBranch(branchSaved)).thenReturn(Mono.just(branchSaved));
+    Mockito.when(branchUseCase.saveBranch(Mockito.any(Branch.class)))
+        .thenReturn(Mono.just(branchSaved));
+    Mockito.when(branchRepository.save(Mockito.any(Branch.class)))
+        .thenReturn(Mono.just(branchSaved));
 
     var response = webTestClient.post()
         .uri("/api/branch")
@@ -48,9 +52,13 @@ class BranchRouterRestTest {
         .exchange();
 
     Assertions.assertNotNull(response);
+    response.expectStatus().isCreated();
     var wrapper =
         response.expectBody(new ParameterizedTypeReference<WrapperResponse<BranchDto>>() {
         });
     Assertions.assertNotNull(wrapper);
+    var body = wrapper.returnResult().getResponseBody().getContent();
+    Assertions.assertNotNull(body);
+    assertEquals(requestBody.getName(), body.getName());
   }
 }

@@ -1,11 +1,11 @@
 package co.com.bancolombia.r2dbc.franchise;
 
-import co.com.bancolombia.model.franchise.Franchise;
 import co.com.bancolombia.model.exceptions.BusinessException;
-import co.com.bancolombia.model.franchise.gateways.FranchiseRepository;
-import co.com.bancolombia.r2dbc.franchise.entity.BranchEntity;
-import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.bancolombia.model.exceptions.TechnicalException;
+import co.com.bancolombia.model.franchise.Franchise;
+import co.com.bancolombia.model.franchise.gateways.FranchiseRepository;
+import co.com.bancolombia.r2dbc.franchise.entity.FranchiseEntity;
+import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.log4j.Log4j2;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Repository
 class FranchiseRepositoryAdapter extends ReactiveAdapterOperations<
     Franchise,
-    BranchEntity,
+    FranchiseEntity,
     Long,
     FranchiseReactiveRepository
     > implements FranchiseRepository {

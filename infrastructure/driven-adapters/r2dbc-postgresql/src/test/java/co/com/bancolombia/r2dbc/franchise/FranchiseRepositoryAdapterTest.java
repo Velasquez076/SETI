@@ -4,7 +4,7 @@ import static org.mockito.Mockito.when;
 
 import co.com.bancolombia.model.exceptions.TechnicalException;
 import co.com.bancolombia.model.franchise.Franchise;
-import co.com.bancolombia.r2dbc.franchise.entity.BranchEntity;
+import co.com.bancolombia.r2dbc.franchise.entity.FranchiseEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,14 +28,14 @@ class FranchiseRepositoryAdapterTest {
   FranchiseRepositoryAdapter franchiseRepositoryAdapter;
 
   Franchise franchise = new Franchise(1L, "Test Franchise");
-  BranchEntity entity = new BranchEntity(1L, "Test franchise Entity");
+  FranchiseEntity entity = new FranchiseEntity(1L, "Test franchise Entity");
   RuntimeException error = new RuntimeException("Database error");
 
   private static final String DB_ERR_MSG = "Database error";
 
   @Test
   void saveFranchiseSuccessTest() {
-    when(mapper.map(franchise, BranchEntity.class)).thenReturn(entity);
+    when(mapper.map(franchise, FranchiseEntity.class)).thenReturn(entity);
     when(reactiveRepository.save(entity)).thenReturn(Mono.just(entity));
     when(mapper.map(entity, Franchise.class)).thenReturn(franchise);
 
@@ -49,7 +49,7 @@ class FranchiseRepositoryAdapterTest {
 
   @Test
   void saveFranchiseTechnicalExceptionTest() {
-    when(mapper.map(franchise, BranchEntity.class)).thenReturn(entity);
+    when(mapper.map(franchise, FranchiseEntity.class)).thenReturn(entity);
     when(reactiveRepository.save(entity)).thenReturn(Mono.error(error));
 
     var result = franchiseRepositoryAdapter.save(franchise);
@@ -63,7 +63,7 @@ class FranchiseRepositoryAdapterTest {
   @Test
   void updateSuccessTest() {
     when(reactiveRepository.findById(1L)).thenReturn(Mono.just(entity));
-    when(mapper.map(franchise, BranchEntity.class)).thenReturn(entity);
+    when(mapper.map(franchise, FranchiseEntity.class)).thenReturn(entity);
     when(reactiveRepository.save(entity)).thenReturn(Mono.just(entity));
     when(mapper.map(entity, Franchise.class)).thenReturn(franchise);
 
