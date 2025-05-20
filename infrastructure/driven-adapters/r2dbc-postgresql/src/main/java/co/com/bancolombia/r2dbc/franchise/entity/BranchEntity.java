@@ -15,7 +15,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "franchises")
-public class FranchiseEntity {
+public class BranchEntity {
 
   @Id
   @Column(value = "id_franchise")

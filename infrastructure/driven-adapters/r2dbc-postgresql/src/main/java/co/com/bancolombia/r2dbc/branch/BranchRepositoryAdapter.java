@@ -55,22 +55,4 @@ class BranchRepositoryAdapter extends ReactiveAdapterOperations<
           return Mono.error(new TechnicalException(err.getMessage()));
         });
   }
-
-  @Override
-  public Flux<Branch> findByFranchiseId(Long id) {
-    return repository.findByIdFranchise(id)
-        .switchIfEmpty(
-            Mono.error(
-                new BusinessException(String.format("Franchise with id '%s' not found", id))))
-        .map(this::buildBranch)
-        .onErrorResume(err -> {
-          log.error(LOG_MESSAGE, err.getMessage(), err);
-          return Flux.error(new TechnicalException(err.getMessage()));
-        });
-  }
-
-  private Branch buildBranch(BranchEntity branchEntity) {
-    return new Branch(branchEntity.getId(), branchEntity.getIdFranchise(),
-        branchEntity.getName());
-  }
 }
